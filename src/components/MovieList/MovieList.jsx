@@ -7,7 +7,7 @@ import Fire from "../../assets/fire.png";
 import MovieCard from "./MovieCard";
 import FilterGroup from "./FilterGroup";
 
-const MovieList = () => {
+const MovieList = ({ searchQuery }) => {
   const [movies, setMovies] = useState([]);
   const [filterMovies, setFilterMovies] = useState([]);
   const [minRating, setMinRating] = useState(0);
@@ -16,10 +16,20 @@ const MovieList = () => {
     order: "asc",
   });
 
-  //this will run on only first render
+  // //this will run on only first render
+  // useEffect(() => {
+  //   fetchMovies();
+  // }, []);
+
+  // Fetch movies when search changes
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    if (searchQuery) {
+      fetchMovies(searchQuery);
+    } else {
+      searchQuery = "ant";
+      fetchMovies(searchQuery);
+    }
+  }, [searchQuery]);
 
   //Runs on the first render
   //And any time any dependency value changes
@@ -36,9 +46,9 @@ const MovieList = () => {
   }, [sort]);
 
   //fetch movies from api using the Search parameter of omdb
-  const fetchMovies = async () => {
+  const fetchMovies = async (query) => {
     const response = await fetch(
-      "https://www.omdbapi.com/?s=new&apikey=211c8b17&"
+      `https://www.omdbapi.com/?s=${query}&apikey=211c8b17&`
     );
     const data = await response.json();
     console.log(">>movies:", data);
@@ -67,7 +77,6 @@ const MovieList = () => {
       setFilterMovies(movies);
     } else {
       setMinRating(rate);
-
       const filtered = movies.filter((movie) => movie.imdbRating >= rate);
       setFilterMovies(filtered);
     }
@@ -82,11 +91,6 @@ const MovieList = () => {
   return (
     <section className="movie_list">
       <header className="align_center movie_list_header">
-        <h2 className="align_center movie_list_heading">
-          Popular{" "}
-          <img src={Fire} alt="fire emoji" className="navbar_emoji"></img>
-        </h2>
-
         <div className="align_center movie_list_fs">
           <FilterGroup
             minRating={minRating}

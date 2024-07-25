@@ -1,29 +1,32 @@
 import React from "react";
 import "./Navbar.css";
-import Fire from "../../assets/fire.png";
-import Star from "../../assets/glowing-star.png";
-import Party from "../../assets/partying-face.png";
 import DarkMode from "../DarkMode/DarkMode";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-const Navbar = () => {
+const Navbar = ({ onSearch }) => {
+  const handleInputChange = (e) => {
+    onSearch(e.target.value);
+  };
+
   return (
     <nav className="navbar">
       <h1>MovieManiac</h1>
 
       <div className="navbar_links">
+        <div className="search">
+          <button className="search_button">
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="search_icon" />
+          </button>
+          <input
+            type="text"
+            className="searchbar"
+            placeholder="Search movies.."
+            onChange={handleInputChange}
+          ></input>
+        </div>
+
         <DarkMode />
-        <a href="">
-          Popular{" "}
-          <img src={Fire} alt="fire emoji" className="navbar_emoji"></img>
-        </a>
-        <a href="">
-          Top Rated{" "}
-          <img src={Star} alt="star emoji" className="navbar_emoji"></img>
-        </a>
-        <a href="">
-          Upcoming{" "}
-          <img src={Party} alt="party emoji" className="navbar_emoji"></img>
-        </a>
       </div>
     </nav>
   );
